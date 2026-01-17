@@ -1,0 +1,103 @@
+# ========================================
+# VARIABLES D'ENVIRONNEMENT - BACK-END
+# ========================================
+# Copier ce fichier vers .env et remplir les valeurs
+
+# ----- BASE DE DONNÉES -----
+# URL de connexion PostgreSQL
+# Format : postgresql://USER:PASSWORD@HOST:PORT/DATABASE
+# Exemple Railway : postgresql://postgres:xxx@containers-us-west-xxx.railway.app:5432/railway
+DATABASE_URL=postgresql://user:password@localhost:5432/elearning_db
+
+# ----- AUTHENTIFICATION JWT -----
+# Secret pour signer les tokens JWT (minimum 32 caractères)
+# Générer avec : node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+JWT_SECRET=votre_cle_secrete_tres_longue_et_aleatoire_minimum_32_caracteres
+
+# Durée de validité du token (ex: 7d, 30d, 24h)
+JWT_EXPIRES_IN=7d
+
+# ----- SERVEUR -----
+# Port du serveur backend
+PORT=3000
+
+# URL du backend (pour logs, emails, etc.)
+BACKEND_URL=http://localhost:3000
+
+# ----- CORS -----
+# URL du front-end autorisé (séparées par des virgules si plusieurs)
+FRONTEND_URL=http://localhost:5173
+# En production : https://votre-app.vercel.app
+
+# ----- UPLOAD DE FICHIERS -----
+# Taille maximale des fichiers (en octets)
+# 10MB = 10485760, 50MB = 52428800
+MAX_FILE_SIZE=10485760
+
+# Dossier de stockage des fichiers uploadés (si stockage local)
+UPLOAD_DIR=./uploads
+
+# ----- STOCKAGE CLOUD (Optionnel) -----
+# Cloudinary (pour images et PDF)
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+
+# AWS S3 (alternative)
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+AWS_REGION=eu-west-1
+AWS_S3_BUCKET=
+
+# ----- EMAIL (Optionnel mais recommandé) -----
+# Configuration SMTP pour envoi d'emails
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=votre-email@gmail.com
+# Pour Gmail : créer un "mot de passe d'application" dans les paramètres Google
+SMTP_PASS=votre_mot_de_passe_app
+
+# Email expéditeur par défaut
+EMAIL_FROM=noreply@votre-etablissement.fr
+
+# ----- SÉCURITÉ -----
+# Nombre de rounds bcrypt pour hasher les mots de passe (10 recommandé)
+BCRYPT_ROUNDS=10
+
+# Rate limiting (nombre de requêtes max par fenêtre de temps)
+RATE_LIMIT_WINDOW_MS=900000  # 15 minutes en millisecondes
+RATE_LIMIT_MAX_REQUESTS=100  # 100 requêtes max
+
+# ----- RGPD -----
+# Conservation des logs d'activité (en jours)
+ACTIVITY_LOG_RETENTION_DAYS=365
+
+# Délai avant suppression définitive d'un compte (en jours)
+ACCOUNT_DELETION_DELAY_DAYS=30
+
+# ----- ENVIRONNEMENT -----
+# development | production | test
+NODE_ENV=development
+
+# ----- MONITORING (Optionnel) -----
+# Sentry pour tracking des erreurs
+SENTRY_DSN=
+
+# ----- SERVICES EXTERNES (Optionnel) -----
+# Intégration visioconférence (Jitsi Meet)
+JITSI_DOMAIN=meet.jit.si
+JITSI_APP_ID=
+
+# OpenAI (pour génération de quiz automatique - Phase 4)
+OPENAI_API_KEY=
+
+# ----- DIVERS -----
+# Langue par défaut
+DEFAULT_LANGUAGE=fr
+
+# Timezone
+TZ=Europe/Paris
+
+# Mode debug (afficher les requêtes SQL)
+DEBUG=false

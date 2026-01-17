@@ -1,0 +1,38 @@
+# ========================================
+# VARIABLES D'ENVIRONNEMENT - FRONT-END
+# ========================================
+# Copier ce fichier vers .env dans le dossier frontend/
+
+# ----- API BACKEND -----
+# URL de l'API backend
+# En développement local :
+VITE_API_URL=http://localhost:3000/api/v1
+
+# En production (Railway) :
+# VITE_API_URL=https://votre-backend.railway.app/api/v1
+
+# ----- CONFIGURATION -----
+# Nom de l'application (affiché dans le header)
+VITE_APP_NAME=Plateforme E-Learning BTS STMG
+
+# ----- STOCKAGE -----
+# Clé de stockage local pour le token
+VITE_STORAGE_KEY=auth_token
+
+# ----- CLOUDINARY (si utilisé pour upload depuis le front) -----
+VITE_CLOUDINARY_CLOUD_NAME=
+VITE_CLOUDINARY_UPLOAD_PRESET=
+
+# ----- ANALYTICS (Optionnel) -----
+# Google Analytics
+VITE_GA_TRACKING_ID=
+
+# ----- SENTRY (Optionnel) -----
+# Tracking des erreurs front-end
+VITE_SENTRY_DSN=
+
+# ----- FEATURE FLAGS (Optionnel) -----
+# Activer/désactiver certaines fonctionnalités
+VITE_ENABLE_GAMIFICATION=false
+VITE_ENABLE_NOTIFICATIONS=false
+VITE_ENABLE_CHAT=false

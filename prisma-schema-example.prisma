@@ -1,0 +1,184 @@
+// ========================================
+// EXEMPLE 1 : Configuration Prisma (ORM)
+// ========================================
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              Int       @id @default(autoincrement())
+  email           String    @unique
+  passwordHash    String
+  firstName       String
+  lastName        String
+  role            Role
+  classe          String?
+  isActive        Boolean   @default(true)
+  gdprConsent     Boolean   @default(false)
+  gdprConsentDate DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  lastLogin       DateTime?
+
+  courses         Course[]
+  quizAttempts    QuizAttempt[]
+  comments        Comment[]
+  progress        StudentProgress[]
+  activityLogs    ActivityLog[]
+
+  @@index([email])
+  @@index([role])
+}
+
+enum Role {
+  STUDENT
+  TEACHER
+  ADMIN
+}
+
+model Course {
+  id          Int       @id @default(autoincrement())
+  teacherId   Int
+  title       String
+  description String?
+  classe      String?
+  isPublished Boolean   @default(false)
+  orderIndex  Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  teacher     User      @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  resources   Resource[]
+  quizzes     Quiz[]
+  comments    Comment[]
+  progress    StudentProgress[]
+
+  @@index([teacherId])
+  @@index([classe])
+}
+
+model Quiz {
+  id               Int       @id @default(autoincrement())
+  courseId         Int
+  title            String
+  description      String?
+  durationMinutes  Int?
+  maxAttempts      Int       @default(1)
+  isPublished      Boolean   @default(false)
+  availableFrom    DateTime?
+  availableUntil   DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  course           Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  questions        Question[]
+  attempts         QuizAttempt[]
+}
+
+model Question {
+  id            Int       @id @default(autoincrement())
+  quizId        Int
+  questionText  String
+  questionType  QuestionType
+  points        Int       @default(1)
+  orderIndex    Int       @default(0)
+  explanation   String?
+
+  quiz          Quiz      @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  options       Option[]
+  answers       StudentAnswer[]
+}
+
+enum QuestionType {
+  MCQ
+  MULTIPLE
+  SHORT_ANSWER
+  TRUE_FALSE
+}
+
+model Option {
+  id          Int       @id @default(autoincrement())
+  questionId  Int
+  optionText  String
+  isCorrect   Boolean   @default(false)
+  orderIndex  Int       @default(0)
+
+  question    Question  @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  selectedBy  StudentAnswer[]
+}
+
+model QuizAttempt {
+  id              Int       @id @default(autoincrement())
+  quizId          Int
+  studentId       Int
+  attemptNumber   Int       @default(1)
+  startedAt       DateTime  @default(now())
+  submittedAt     DateTime?
+  score           Float?
+  maxScore        Int?
+  percentage      Float?
+  timeSpentMinutes Int?
+  isCompleted     Boolean   @default(false)
+
+  quiz            Quiz      @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  student         User      @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  answers         StudentAnswer[]
+
+  @@index([studentId])
+  @@index([quizId])
+}
+
+model StudentAnswer {
+  id               Int       @id @default(autoincrement())
+  attemptId        Int
+  questionId       Int
+  selectedOptionId Int?
+  answerText       String?
+  isCorrect        Boolean?
+  pointsEarned     Float?
+  answeredAt       DateTime  @default(now())
+
+  attempt          QuizAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  question         Question    @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  selectedOption   Option?     @relation(fields: [selectedOptionId], references: [id], onDelete: SetNull)
+}
+
+model StudentProgress {
+  id              Int       @id @default(autoincrement())
+  studentId       Int
+  courseId        Int
+  isCompleted     Boolean   @default(false)
+  completionDate  DateTime?
+  lastAccessed    DateTime  @default(now())
+  timeSpentMinutes Int      @default(0)
+
+  student         User      @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  course          Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, courseId])
+  @@index([studentId])
+}
+
+model ActivityLog {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  action      String
+  ipAddress   String?
+  userAgent   String?
+  details     Json?
+  createdAt   DateTime  @default(now())
+
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+// ... autres modèles (Resource, Comment, etc.)
